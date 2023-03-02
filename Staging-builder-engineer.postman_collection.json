@@ -1,0 +1,660 @@
+{
+	"info": {
+		"_postman_id": "e9103d3a-f9a5-44e1-b977-02c11262e0cc",
+		"name": "Staging-builder-engineer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25808926"
+	},
+	"item": [
+		{
+			"name": "Update_users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(\"Updated successfully\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Referer",
+						"value": "https://staging.engineer.ai/"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.188 Safari/537.36 CrKey/1.54.250320"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "authtoken",
+						"value": "Rysvcssv5Wn4bjxPoGP-",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"user\":{\"first_name\":\"Nipa\",\r\n\"last_name\":\"Das\",\r\n\"email\":\"abxy1@gmail.com\",\r\n\"password\":\"test@123\",\r\n\"phone_number\":\"{{phone_number}}\",\r\n\"user_type\":\"User\",\r\n\"currency_id\":2}}"
+				},
+				"url": {
+					"raw": "{{url}}/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check SignUp using invalid phone number format",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"response message\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Sign up failure\");\r",
+							"});\r",
+							"pm.test(\"Error message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.errors.phone_number[0]).to.eql(\"format is not valid\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Referer",
+						"value": "https://staging.engineer.ai/",
+						"type": "text"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.188 Safari/537.36 CrKey/1.54.250320",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"user\": {\r\n    \"first_name\": \"Topoti\",\r\n    \"last_name\": \"Sarkar\",\r\n    \"email\": \"abxy{{$randomInt}}@gmail.com\",\r\n    \"password\": \"test@123\",\r\n    \"phone_number\": \"0132456789\",\r\n    \"user_type\": \"User\",\r\n    \"currency_id\": 2\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sign_in",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+							"});\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"validate multiple fields in response \", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.user.id).to.eql(144772);\r",
+							"    pm.expect(jsonData.user.first_name).to.eql(\"Topoti\");\r",
+							"    pm.expect(jsonData.user.last_name).to.eql(\"Sarkar\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					},
+					{
+						"key": "authtoken",
+						"value": "TJX6psVKskV71VGnbJ8u",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Referer",
+						"value": "https://staging.engineer.ai/",
+						"type": "text"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.188 Safari/537.36 CrKey/1.54.250320",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"abxy119@gmail.com\",\r\n  \"password\": \"test@123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/users/sign_in",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"sign_in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete user",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "id",
+							"value": "144463",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/user",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "build_cards",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-type header value\", function()\r",
+							"{\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\")\r",
+							"}\r",
+							");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Referer",
+						"value": "https://staging.engineer.ai/"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.188 Safari/537.36 CrKey/1.54.250320"
+					},
+					{
+						"key": "authtoken",
+						"value": "QY2j62idPepw4Lq86yFc"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"build_card\":{\"project_name\":\"My Builder Project\",\"description\":null,\"target_user_group\":\"\",\"customized_template_name\":\"\",\"skip_freemium_validation\":false,\"utm_source\":null,\"utm_campaign\":null,\"utm_medium\":null,\"support_maintenance_weeks\":0,\"startup\":false,\"self_funded\":false,\"npo_ngo\":false,\"specing\":false,\"product_id\":\"\",\"audience_id\":null,\"project_status_id\":null,\"application_ids\":[],\"platform_ids\":[],\"feature_ids\":[],\"team_id\":null,\"speed_id\":null,\"build_phase_vars\":[1,3],\"promotion_id\":null,\"region_skill_ids\":[],\"competitors\":[],\"app_style_ids\":[],\"category_ids\":[],\"startup_urls\":[],\"attachments_attributes\":[],\"quote_price\":0,\"status\":\"card_initialized\",\"nda_signed\":false,\"build_card_phases\":[],\"is_under_support\":true,\"care_type\":\"standard_care\",\"buildcardphases\":[],\"is_advance\":false,\"pricing_params\":null,\"build_card_phases_attributes\":[],\"multiplier_experiment_id\":\"20\",\"currency_id\":2,\"cloud_price\":0,\"cloud_opted\":true,\"cloud_user_count\":0,\"source\":\"home\",\"create_spec_call\":\"false\",\"upfront\":false,\"template_query_string\":\"\",\"tailor_made\":false,\"version\":3,\"build_phase_ids\":[]},\"event\":\"\",\"activities\":{},\"pricing_params\":{\"currency\":{\"multiplier\":1,\"exchange_rate\":1,\"code\":\"USD\",\"custom_prototype_price\":1999},\"team\":{\"price_multiplier\":1,\"week_multiplier\":1},\"partner_multiplier\":1,\"build_card_phases\":{},\"application_ids\":[],\"relaxed_speed\":{\"id\":4,\"price_multiplier\":0.75,\"week_multiplier\":1.25},\"duration_multiplier\":0.75,\"price_multiplier\":2.14,\"custom_price_multiplier\":0.63,\"version\":3,\"feature_breakup_needed\":true}}"
+				},
+				"url": {
+					"raw": "https://api-staging-builder.engineer.ai/build_cards",
+					"protocol": "https",
+					"host": [
+						"api-staging-builder",
+						"engineer",
+						"ai"
+					],
+					"path": [
+						"build_cards"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check signup using already signed email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"check message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(\"Sign up failure\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"check error message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData .errors.email[0]).to.eql( \"is already taken\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Referer",
+						"value": "https://staging.engineer.ai/"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.188 Safari/537.36 CrKey/1.54.250320"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"user\":{\"first_name\":\"Abcd\",\r\n\"last_name\":\"\",\r\n\"email\":\"abxy03351@gmail.com\",\r\n\"password\":\"test@123\",\r\n\"phone_number\":\"{{phone_number}}\",\r\n\"user_type\":\"User\",\r\n\"currency_id\":2}}"
+				},
+				"url": {
+					"raw": "https://api-staging-builder.engineer.ai/users",
+					"protocol": "https",
+					"host": [
+						"api-staging-builder",
+						"engineer",
+						"ai"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user by id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authtoken",
+						"value": "6RU7ryoDZwQfNveYPBqz",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/user/144461",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"144461"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get category by filter",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Referer",
+						"value": "https://staging.engineer.ai/"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.188 Safari/537.36 CrKey/1.54.250320"
+					},
+					{
+						"key": "authtoken",
+						"value": "DUAqRgnvFwqNu8csCFJM"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/v1/filters?currency_id=2&duration_multiplier=0.75&price_multiplier=2.14&custom_price_multiplier=0.63&user_price_multiplier=1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"filters"
+					],
+					"query": [
+						{
+							"key": "currency_id",
+							"value": "2"
+						},
+						{
+							"key": "duration_multiplier",
+							"value": "0.75"
+						},
+						{
+							"key": "price_multiplier",
+							"value": "2.14"
+						},
+						{
+							"key": "custom_price_multiplier",
+							"value": "0.63"
+						},
+						{
+							"key": "user_price_multiplier",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Referer",
+						"value": "https://staging.engineer.ai/"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.188 Safari/537.36 CrKey/1.54.250320"
+					},
+					{
+						"key": "authtoken",
+						"value": "DUAqRgnvFwqNu8csCFJM"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/user",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sign Up",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var randomId= _.random(100000,999999)\r",
+							"var code=\"+880-1500\"\r",
+							"var phone_number=code+randomId\r",
+							"console.log(phone_number)\r",
+							"pm.collectionVariables.set(\"phone_number\",phone_number)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"checking name\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.user.first_name).to.eql(\"Topoti\");\r",
+							"    pm.expect(jsonData.user.last_name).to.eql(\"Sarkar\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authtoken",
+						"value": "xi8bNJ8ejXs8JQjxYWS_"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Referer",
+						"value": "https://staging.engineer.ai/"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.188 Safari/537.36 CrKey/1.54.250320"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"user\":{\r\n    \"first_name\":\"Topoti\",\r\n    \"last_name\":\"Sarkar\",\r\n    \"email\":\"abxy{{$randomInt}}@gmail.com\",\r\n    \"password\":\"test@123\",\r\n    \"phone_number\":\"{{phone_number}}\",\r\n    \"user_type\":\"User\",\r\n    \"currency_id\":2}}"
+				},
+				"url": {
+					"raw": "https://api-staging-builder.engineer.ai/users",
+					"protocol": "https",
+					"host": [
+						"api-staging-builder",
+						"engineer",
+						"ai"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check signup using invalid email format",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"response message\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Sign up failure\");\r",
+							"});\r",
+							"pm.test(\"Error message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.errors.email[0]).to.eql(\"is invalid\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authtoken",
+						"value": "xi8bNJ8ejXs8JQjxYWS_"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Referer",
+						"value": "https://staging.engineer.ai/"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.188 Safari/537.36 CrKey/1.54.250320"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"user\":{\r\n    \"first_name\":\"Topoti\",\r\n    \"last_name\":\"Sarkar\",\r\n    \"email\":\"abxy{{$randomInt}}@com\",\r\n    \"password\":\"test@123\",\r\n    \"phone_number\":\"{{phone_number}}\",\r\n    \"user_type\":\"User\",\r\n    \"currency_id\":2}}"
+				},
+				"url": {
+					"raw": "{{url}}/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://api-staging-builder.engineer.ai",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "authtoken",
+			"value": ""
+		},
+		{
+			"key": "phone_number",
+			"value": ""
+		}
+	]
+}
